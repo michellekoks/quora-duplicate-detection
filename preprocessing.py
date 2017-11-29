@@ -1,6 +1,6 @@
 import pandas as pd
-import nltk
-nltk.download('stopwords')
+#import nltk
+#nltk.download('stopwords')
 import string
 
 #####################################################
@@ -121,3 +121,4 @@ def remove_punctuation(s):
     result = "".join(i for i in s if i not in string.punctuation)
     return result
 
+#################################
