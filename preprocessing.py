@@ -155,7 +155,9 @@ def correct_spelling(text):
         spelling_corrections.get(token, token)
         for token in tokenizer.tokenize(text)
     )
-
+#####################################################
+# LOADING GLOVE VECTOR                              #
+#####################################################
 
 def loadGloveFile(gloveFilePath):
     """
@@ -171,5 +173,30 @@ def loadGloveFile(gloveFilePath):
     print ("Done.",len(w2v)," words loaded!")
     return w2v
 
+def token_to_vec(tokenized_questions, glove_vec):
+    """
+    :param tokenized_questions: list/array of tokenized questions
+    :return: 100-D vector for word representation
+    """
+    print('Look up words in Glove wiki...')
+    missing_word = 0
+    result = []
+    for i, words in enumerate(tokenized_questions):
+        if i % 100000 == 0:
+            print(i)
+
+        vector = []
+        for word in words:
+            try:
+                vector += [glove_vec[word]]
+            except KeyError:
+                # print('the word '+word+' is not in the dictionary')
+                vector += [0]
+                missing_word += 1
+
+        result += [vector]
+    print("There are {} missing words".format(missing_word))
+    print("Those words are replaced with vectors of zeros")
+    return result
 #################################
 
