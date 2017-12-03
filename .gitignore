@@ -1,0 +1,3 @@
+# data directories
+.ipynb_checkpoints
+__pycache__/
