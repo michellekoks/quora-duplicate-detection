@@ -1,3 +1,4 @@
 # data directories
 .ipynb_checkpoints
 __pycache__/
+Glove/
