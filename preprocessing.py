@@ -1,7 +1,17 @@
 import pandas as pd
 import nltk
-nltk.download('stopwords')
+tokenizer = nltk.tokenize.RegexpTokenizer(r'\w+')
 import string
+from pygoose import *
+
+#####################################################
+# LOAD READY-MADE STOPWORDS AND SPELL CHECK         #
+# https://github.com/YuriyGuts/                     #
+# kaggle-quora-question-pairs                       #
+#####################################################
+
+stopwords = set(kg.io.load_lines('./data/rm/stopwords.vocab'))
+spelling_corrections = kg.io.load_json('./data/rm/spelling_corrections.json')
 
 #####################################################
 #CREATE ID FOR QUESTION WITH EXACTLY SIMILAR STRINGS#
@@ -49,20 +59,34 @@ def unique_question_map(x_train, x_test):
 
 def preprocess(text):
     """
-    :param text: text string 
+    :param text: text string
     :return: processed text (dependent on the used functions)
     TO BE UPDATED
     """
     text = spell_digits(text)
     text = expand_negations(text)
     text = remove_punctuation(text)
+    text = correct_spelling(text)
+    text = text.lower()
 
     return text
+
+def tokenize(text):
+    """
+    :param text: (supposedly) cleaned text sentence
+    :return: list of word tokens (using nltk package)
+
+    :required: stopwords
+    """
+    tokens = tokenizer.tokenize(text)
+    #tokens = [t for t in tokens if t not in stopwords]
+
+    return tokens
 
 
 def translate(text, translation):
     """
-    :param text: text string
+    :param text: text stringfgas
     :param translation: a dictionary mapping the characters need to be replaced
         and the replacing characters.
     :example:
@@ -120,4 +144,32 @@ def remove_punctuation(s):
     """
     result = "".join(i for i in s if i not in string.punctuation)
     return result
+
+def correct_spelling(text):
+    """
+    :param text: text string
+    :return: spell corrected text
+    'https://github.com/YuriyGuts/kaggle-quora-question-pairs/blob/master/notebooks/preproc-tokenize-spellcheck.ipynb
+    """
+    return ' '.join(
+        spelling_corrections.get(token, token)
+        for token in tokenizer.tokenize(text)
+    )
+
+
+def loadGloveFile(gloveFilePath):
+    """
+    load glove file from txt
+    """
+    print ("Loading Glove Model from " + gloveFilePath + " ....")
+    w2v ={}
+    with open(gloveFilePath, "rb") as lines:
+        for line in lines:
+            if (len(w2v) % 50000 == 0):
+                print(len(w2v))
+            w2v[line.split()[0]] = [float(val) for val in line.split()[1:]]
+    print ("Done.",len(w2v)," words loaded!")
+    return w2v
+
+#################################
 
