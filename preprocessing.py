@@ -169,7 +169,7 @@ def loadGloveFile(gloveFilePath):
         for line in lines:
             if (len(w2v) % 50000 == 0):
                 print(len(w2v))
-            w2v[line.split()[0]] = [float(val) for val in line.split()[1:]]
+            w2v[line.split()[0].decode('utf-8')] = [float(val) for val in line.split()[1:]]
     print ("Done.",len(w2v)," words loaded!")
     return w2v
 
@@ -191,12 +191,12 @@ def token_to_vec(tokenized_questions, glove_vec):
                 vector += [glove_vec[word]]
             except KeyError:
                 # print('the word '+word+' is not in the dictionary')
-                vector += [0]
+                vector += [[0] * 100]
                 missing_word += 1
 
         result += [vector]
     print("There are {} missing words".format(missing_word))
-    print("Those words are replaced with vectors of zeros")
+    print("Those words are replaced with vectors of 100 zeros")
     return result
 #################################
 
