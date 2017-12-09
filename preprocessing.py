@@ -3,6 +3,7 @@ import nltk
 tokenizer = nltk.tokenize.RegexpTokenizer(r'\w+')
 import string
 from pygoose import *
+from gensim.models import KeyedVectors, Word2Vec
 
 #####################################################
 # LOAD READY-MADE STOPWORDS AND SPELL CHECK         #
@@ -198,5 +199,58 @@ def token_to_vec(tokenized_questions, glove_vec):
     print("There are {} missing words".format(missing_word))
     print("Those words are replaced with vectors of 100 zeros")
     return result
+
+def word2vec_embedding(token_train, token_test, embedding_dim):
+    from gensim.models import KeyedVectors, Word2Vec
+    from nltk.corpus import stopwords
+
+    # Load Google News vectors
+    googlenews_embedding = './data/GoogleNews-vectors-negative300.bin.gz'
+    word2vec = KeyedVectors.load_word2vec_format(googlenews_embedding, binary=True)
+    print('google news vectors loaded')
+    
+    vocabulary = dict()
+    inverse_vocabulary = ['<unk>']
+    stops = set(stopwords.words('english'))
+    questions = ['tokenq1', 'tokenq2']
+
+    # Iterate over the questions of both training and test datasets
+    for dataset in [token_train, token_test]:
+        for index, row in dataset.iterrows():
+
+            # Iterate through the text of both questions of the row
+            for question in questions:
+
+                question_to_number = []  # q2n -> question numbers representation
+                for word in row[question]:
+
+                    # Check for unwanted words
+                    if word in stops and word not in word2vec.vocab:
+                        continue
+
+                    if word not in vocabulary:
+                        vocabulary[word] = len(inverse_vocabulary)
+                        question_to_number.append(len(inverse_vocabulary))
+                        inverse_vocabulary.append(word)
+                    else:
+                        question_to_number.append(vocabulary[word])
+
+                # Replace questions as word to question as number representation
+                dataset.set_value(index, question, question_to_number)
+                print('iteration completed')
+                
+    # Build the embedding matrix
+    embeddings = 1 * np.random.randn(len(vocabulary) + 1, embedding_dim)  
+                                            # This will be the embedding matrix
+    embeddings[0] = 0  # So that the padding will be ignored
+
+    for word, index in vocabulary.items():
+        if word in word2vec.vocab:
+            embeddings[index] = word2vec.word_vec(word)
+            print('embedding matrix created')
+            
+    return embeddings
+
+
 #################################
 
