@@ -2,7 +2,7 @@
 .ipynb_checkpoints
 __pycache__/
 Glove/
-/data/vec_test_glove.pkl/data/vec_train_glove.pkl
-/data/GoogleNews-vectors-negative300.bin.gz
+data/vec_test_glove.pkldata/vec_train_glove.pkl
+data/GoogleNews-vectors-negative300.bin.gz
 
  
