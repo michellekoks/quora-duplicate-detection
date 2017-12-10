@@ -74,7 +74,7 @@ X_train, X_validation, Y_train, Y_validation = train_test_split(question_cols, d
 # Split to dicts
 X_train = {'left': X_train.tokenq1, 'right': X_train.tokenq2}
 X_validation = {'left': X_validation.tokenq1, 'right': X_validation.tokenq2}
-X_test = {'left': token_test.tokenq1, 'right': token_test.tokenq1}
+X_test = {'left': token_test.tokenq1, 'right': token_test.tokenq2}
 
 # Convert labels to their numpy representations
 Y_train = Y_train.values
@@ -90,10 +90,10 @@ for dataset, side in itertools.product([X_train, X_validation], ['left', 'right'
 assert X_train['left'].shape == X_train['right'].shape
 assert len(X_train['left']) == len(Y_train)
 
-n_hidden = 10
+n_hidden = 50
 #n_hidden = 1
 gradient_clipping_norm = 1.25
-batch_size = 50
+batch_size = 64
 #batch_size = 1
 n_epoch = 25
 #n_epoch = 10
@@ -157,3 +157,14 @@ plt.xlabel('Epoch')
 plt.legend(['Train', 'Validation'], loc='upper right')
 plt.show()
 
+for side in ['left', 'right']:
+    X_test[side] = pad_sequences(X_test[side], maxlen=max_seq_length)
+    
+
+predict = malstm.predict([X_test['left'], X_test['right']], batch_size = None)
+submission = pd.DataFrame()
+
+submission['test_id'] = token_test['test_id']
+submission['is_duplicate'] = predict.round(0)
+
+submission.to_csv(default + 'submission2.csv', index = False) 
