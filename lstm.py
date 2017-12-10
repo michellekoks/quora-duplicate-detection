@@ -167,4 +167,4 @@ submission = pd.DataFrame()
 submission['test_id'] = token_test['test_id']
 submission['is_duplicate'] = predict.round(0)
 
-submission.to_csv(default + 'submission2.csv', index = False) 
+submission.to_csv('submission2.csv', index = False) 
