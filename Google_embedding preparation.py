@@ -47,3 +47,6 @@ for word, index in tqdm(vocabulary.items()):
 np.save(file = default + "/data/embeddings.npy", arr = embeddings,allow_pickle = False)
 np.save(file = default + "/data/vocabulary.npy",arr = vocabulary, allow_pickle = True )
 np.save(file = default + "/data/inverse_vocabulary.npy",arr = inverse_vocabulary, allow_pickle = True )
+
+token_train.to_pickle(default + "/data/token_train_n.pkl")
+token_test.to_pickle(default + "/data/token_test_n.pkl")
