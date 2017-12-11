@@ -105,7 +105,6 @@ malstm.compile(loss='mean_squared_error', optimizer='rmsprop', metrics=['accurac
 
 # =============================================================================
  # Start training
-print('Train on the train dataset, without the validation...')
 STAMP = 'Malstm_%d'%(N_LAYERS)
 early_stopping =EarlyStopping(monitor='val_loss', patience=3)
 model_path = STAMP + '.h5'
