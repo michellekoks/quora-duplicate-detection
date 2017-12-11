@@ -14,7 +14,7 @@ import keras.backend as K
 from keras.optimizers import Adadelta, SGD
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
-
+print('Loading the tokenize data...')
 # READ DATA
 default = '.'
 token_train = pd.read_pickle(default + "/data/token_train_n.pkl")
@@ -24,7 +24,7 @@ token_test = pd.read_pickle(default + "/data/token_test_n.pkl")
 embeddings = np.load(file = default + "/data/embeddings.npy")
 vocabulary = np.load(file = default + "/data/vocabulary.npy")
 inverse_vocabulary = np.load(file = default + "/data/inverse_vocabulary.npy")
-
+print('Done')
 
 # SPECIFICATIONS
 TRAIN_SIZE = 0.8
@@ -47,9 +47,11 @@ Y_train = train['is_duplicate'].values
 Y_val = val['is_duplicate'].values
 
 # Zero padding
+print('Zero padding the sequences...')
 for dataset, side in itertools.product([X_train, X_val], ['left', 'right']):
     dataset[side] = pad_sequences(dataset[side], maxlen=MAX_SEQ_LEN)
-    
+print('Done')
+
 # MODELLING SPECIFICATION
 N_LAYERS = 10
 #GRAD_CLIPPING_NORM = 1.25
@@ -103,6 +105,7 @@ malstm.compile(loss='mean_squared_error', optimizer='rmsprop', metrics=['accurac
 
 # =============================================================================
  # Start training
+print('Train on the train dataset, without the validation...')
 STAMP = 'Malstm_%d'%(N_LAYERS)
 early_stopping =EarlyStopping(monitor='val_loss', patience=3)
 model_path = STAMP + '.h5'
@@ -148,9 +151,10 @@ plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Validation'], loc='upper right')
 plt.show()
-
+print('Done')
 ########################################
 # TRAIN AGAIN WITH THE WHOLE DATASET####
+print('Train on the whole train dataset...')
 X_train_all =  {'left': data_all.tokenq1, 'right': data_all.tokenq2}
 Y_train_all = data_all['is_duplicate'].values
 
@@ -168,9 +172,10 @@ np.save(file = default+'/malstm_history_train_all2.npy', arr =malstm_trained.his
 
 #Save model weights
 malstm.save_weights(default+ '/malstm_all2.npy')
-
+print('Done')
 
 # Make prediction
+print('Create submission file...')
 for side in ['left', 'right']:
     X_test[side] = pad_sequences(X_test[side], maxlen=MAX_SEQ_LEN)
      
@@ -182,3 +187,5 @@ submission['test_id'] = token_test['test_id']
 submission['is_duplicate'] = predict.round(0)
 
 submission.to_csv(default + '/submission.csv', index = False) 
+
+print('Done')
