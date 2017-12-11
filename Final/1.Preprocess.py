@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from util import *
 
-print('loading the csv data')
+print('Loading the csv data...')
 x_train = pd.read_csv('./data/train_data.csv')
 y_train = pd.read_csv('./data/train_labels.csv')
 x_test = pd.read_csv('./data/test_data.csv')
@@ -13,7 +13,7 @@ x_train, x_test = unique_question_map(x_train, x_test)
 df_train = x_train.drop('is_duplicate',1)
 df_train = df_train.merge(y_train,on="id")
 
-print('preprocess the data, remove the punctuation, spell correcting, convert to lower-case....')
+print('Preprocess the data, remove the punctuation, spell correcting, convert to lower-case....')
 df_train = df_train[['id','question1', 'qid1', 'question2', 'qid2','is_duplicate']].dropna()
 df_train['question1'] = df_train['question1'].apply(preprocess) 
 df_train['question2'] = df_train['question2'].apply(preprocess)
@@ -39,7 +39,7 @@ print('Done')
 #df_train.to_pickle("./data/df_train.pkl")
 #df_test.to_pickle("./data/df_test.pkl")
 
-print('Save file to pickle files')
+print('Save file to pickle files...')
 token_train.to_pickle("./data/token_train.pkl")
 token_test.to_pickle("./data/token_test.pkl")
 print('Done')
