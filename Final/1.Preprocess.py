@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from util import *
 
-Print('loading the csv data')
+print('loading the csv data')
 x_train = pd.read_csv('./data/train_data.csv')
 y_train = pd.read_csv('./data/train_labels.csv')
 x_test = pd.read_csv('./data/test_data.csv')
@@ -39,7 +39,7 @@ print('Done')
 #df_train.to_pickle("./data/df_train.pkl")
 #df_test.to_pickle("./data/df_test.pkl")
 
-print ('Save file to pickle files')
+print('Save file to pickle files')
 token_train.to_pickle("./data/token_train.pkl")
 token_test.to_pickle("./data/token_test.pkl")
 print(Done)
