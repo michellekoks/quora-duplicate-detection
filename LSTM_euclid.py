@@ -63,7 +63,7 @@ def exponent_neg_euclid_distance(left, right):
     ''' Helper function for the similarity estimate of the LSTMs outputs
         FROM https://medium.com/mlreview/implementing-eulstm-on-kaggles-quora-question-pairs-competition-8b31b0b16a07
     '''
-    return K.exp(-K.sum(K.sqrt(K.square(left-right), axis=1, keepdims=True)))
+    return K.exp(-(K.mean(K.square(left-right), axis=1, keepdims=True)))
     
 # The visible layer
 left_input = Input(shape=(MAX_SEQ_LEN,), dtype='int32')
@@ -143,6 +143,8 @@ plt.xlabel('Epoch')
 plt.legend(['Train', 'Validation'], loc='upper left')
 plt.show()
 
+plt.savefig(default + '/' + STAMP+ '_Accuracy.png')
+
 # Plot loss
 plt.plot(eulstm_trained.history['loss'])
 plt.plot(eulstm_trained.history['val_loss'])
@@ -151,6 +153,7 @@ plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Validation'], loc='upper right')
 plt.show()
+plt.savefig(default + '/' + STAMP+ '_Loss.png')
 
 ########################################
 # TRAIN AGAIN WITH THE WHOLE DATASET####
