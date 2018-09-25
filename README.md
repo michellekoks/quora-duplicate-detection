@@ -12,7 +12,7 @@
   * Convo
   
   
-## STEPS TO RUN THE MODEL
+## Steps to run the model
 
 #### Download the data files (train.csv, test.csv, train_label.csv) and those 2 files, put into the "./data" folder:
   1. ready-made spelling correction by YuriyGuts
