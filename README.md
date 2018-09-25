@@ -15,9 +15,9 @@
 ## STEPS TO RUN THE MODEL
 
 #### Download the data files (train.csv, test.csv, train_label.csv) and those 2 files, put into the "./data" folder:
-  1.ready-made spelling correction by YuriyGuts
+  1. ready-made spelling correction by YuriyGuts
   https://github.com/YuriyGuts/kaggle-quora-question-pairs/blob/master/data/aux/spelling_corrections.json
-  2.pre-train word vector from GoogleNews
+  2. pre-train word vector from GoogleNews
   https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing
 
 #### Run 1.Preprocess.py
